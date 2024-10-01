@@ -1,1 +1,7 @@
+# 仮想環境を除外
 fastapi-env/
+
+# Python一時ファイルを除外
+__pycache__/
+*.pyc
+*.pyo
