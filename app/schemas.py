@@ -12,13 +12,14 @@ class MessageCreate(MessageBase):
     # pydanticのconstrを使って、contentが空白でないことをチェックする
     # content: constr(min_length=1)
 
-    # メッセージのカスタムバリデーションを行う関数を定義
+    # メッセージのフィールドごとにカスタムバリデーションを行う場合は、field_validatorデコレータを使う
     @field_validator('content')
-    # class内で定義されたメソッドは、第一引数に自分自身を受け取る必要があるが、staticmethodを使うことで第一引数を省略で
-    @staticmethod
-    def check_content(value):
+    # Fieldごとのバリデーションだがclassmethodを使うのは、Pydanticの内部処理と一貫性のあるインターフェースを提供し、他のバリデーションと整合性を保つため
+    @classmethod
+    def check_content(cls, value):
         if len(value) < 1:
             raise ValueError('メッセージは1文字以上で送信してください')
+        # strip():空白文字を削除するメソッド
         if value.strip() == "":
             raise ValueError('空白のメッセージは送信できません')
         return value
