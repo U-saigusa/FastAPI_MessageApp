@@ -1,6 +1,7 @@
 # FastAPIのエントリーポイント（APIのルート）
 from fastapi import FastAPI, Depends, HTTPException
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import SQLAlchemyError
 from app import crud, models, schemas
 from app.database import get_db, engine
 
@@ -15,13 +16,14 @@ app = FastAPI()
 # DpendesはFastAPIの依存性注入機能を使ってDBセッションを取得する
 def read_messages(skip: int = 0, limit: int = 10, db: Session = Depends(get_db)):
     messages = crud.get_messages(db, skip=skip, limit=limit)
+    if messages is None:
+        raise HTTPException(status_code=404, detail="Messages not found")
     return messages
 
 # メッセージを作成するエンドポイント
 @app.post("/messages/", response_model=schemas.Message)
 def create_message(message: schemas.MessageCreate, db: Session = Depends(get_db)):
     return crud.create_message(db=db, message=message)
-
 
 @app.put("/messages/{message_id}", response_model=schemas.Message)
 def update_message(id: int, message: schemas.MessageUpdate, db: Session = Depends(get_db)):
