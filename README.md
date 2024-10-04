@@ -132,7 +132,7 @@ print(next(gen))  # 3
 
 [FastAPIチュートリアルの「OAuth2、JWTトークンによるBearer」がよくわからなかったので、調べてみた｜猩々博士](https://note.com/mega_gorilla/n/ncec503b5eb8d)
 
-ローカル環境で使用しているパッケージ一覧をを取得しrequirements.txtに書き出す
+## ローカル環境で使用しているパッケージ一覧をを取得しrequirements.txtに書き出す
 
 `pip freeze > requirements.txt`
 
@@ -142,7 +142,7 @@ print(next(gen))  # 3
 
 関数をデコレーションできる。つまり既存関数の処理の前後に自分自身で処理を付け加えることができる。関数を呼ぶ関数。
 
-フォームデータを扱うときは`pip install python-multipart`が必要だった
+### フォームデータを扱うときは`pip install python-multipart`が必要だった
 
 ## FastAPIの非同期について
 
