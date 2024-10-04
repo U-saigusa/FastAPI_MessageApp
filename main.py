@@ -6,11 +6,109 @@ from sqlalchemy.orm import Session
 from app import crud, models, schemas, auth
 from app.database import get_db, engine
 
+description = """
+# API Documentation
+
+## `POST /users/`
+### Description:
+Create a new user in the system.
+
+- **Request Body**: 
+  - `schemas.UserCreate`: User information, including email, password.
+  
+- **Response**: 
+  - Returns the created user object.
+
+- **Error Responses**: 
+  - `400`: If the email is already registered.
+
+---
+
+## `POST /token`
+### Description:
+Authenticate a user and issue an access token.
+
+- **Request Body**: 
+  - `OAuth2PasswordRequestForm`: Contains username (email) and password.
+
+- **Response**: 
+  - Returns an access token for the user and its type.
+
+- **Error Responses**: 
+  - `401`: If the credentials are invalid.
+
+---
+
+## `GET /messages/`
+### Description:
+Retrieve a list of messages with pagination.
+
+- **Query Parameters**: 
+  - `skip`: Number of messages to skip (default: 0).
+  - `limit`: Maximum number of messages to return (default: 10).
+
+- **Response**: 
+  - Returns a list of messages as defined by `schemas.Message`.
+
+- **Error Responses**: 
+  - `404`: If no messages are found.
+
+---
+
+## `POST /messages/`
+### Description:
+Create a new message.
+
+- **Request Body**: 
+  - `schemas.MessageCreate`: Message content.
+
+- **Response**: 
+  - Returns the created message object.
+
+- **Error Responses**: 
+  - `401`: If the user is not authenticated.
+
+---
+
+## `PUT /messages/{message_id}`
+### Description:
+Update an existing message.
+
+- **Path Parameters**: 
+  - `message_id`: ID of the message to update.
+
+- **Request Body**: 
+  - `schemas.MessageUpdate`: New content for the message.
+
+- **Response**: 
+  - Returns the updated message object.
+
+- **Error Responses**: 
+  - `404`: If the message with the specified ID is not found.
+
+---
+
+## `DELETE /messages/{message_id}`
+### Description:
+Delete a message.
+
+- **Path Parameters**: 
+  - `message_id`: ID of the message to delete.
+
+- **Response**: 
+  - Confirms that the message was deleted.
+
+- **Error Responses**: 
+  - `404`: If the message with the specified ID is not found.
+  - `401`: If the user is not authenticated.
+
+"""
+
 # DBのマイグレーションと同じことをしている。
 models.Base.metadata.create_all(bind=engine)
 
 # FastAPIのインスタンスを生成
-app = FastAPI()
+app = FastAPI(description=description)
 
 # OAuth2のBearer Tokenを使って認証するためのスキームを定義
 outh2_scheme = OAuth2PasswordBearer(tokenUrl="token")
