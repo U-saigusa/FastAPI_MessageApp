@@ -6,3 +6,4 @@ fastapi-env/
 
 
 test.db
+.env

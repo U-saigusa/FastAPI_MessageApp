@@ -3,6 +3,18 @@
 from datetime import datetime
 from pydantic import BaseModel, constr, field_validator
 
+class UserBase(BaseModel):
+    email: str
+
+class UserCreate(UserBase):
+    password: str
+
+class User(UserBase):
+    id: int
+
+    class Config:
+        orm_mode = True
+
 # メッセージの基本的な構造を定義
 class MessageBase(BaseModel):
     content: str

@@ -3,7 +3,25 @@
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
-from . import models, schemas
+from . import models, schemas, auth
+
+# ユーザーを取得
+def get_user_by_email(db: Session, email: str):
+    try:
+        return db.query(models.User).filter(models.User.email == email).first()
+    except SQLAlchemyError as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+# ユーザーを作成
+def create_user(db: Session, user: schemas.UserCreate):
+    try:
+        db_user = models.User(email=user.email, hashed_password=auth.get_password_hash(user.password))
+        db.add(db_user)
+        db.commit()
+        db.refresh(db_user)
+        return db_user
+    except SQLAlchemyError as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 # メッセージを取得
 # skip: 何件目から取得するか
